@@ -30,7 +30,6 @@ public class Pet {
 	public PetType getType() {
 		return type;
 	}
-
 	public void setType(PetType type) {
 		this.type = type;
 	}
