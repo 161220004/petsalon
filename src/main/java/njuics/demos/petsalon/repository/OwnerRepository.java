@@ -1,8 +1,11 @@
 package njuics.demos.petsalon.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 import njuics.demos.petsalon.model.Owner;
 
-public interface OwnerRepository extends JpaRepository<Owner, Long> {
+//This will be AUTO IMPLEMENTED by Spring into a Bean called ownerRepository
+//CRUD refers Create, Read, Update, Delete
 
+public interface OwnerRepository extends CrudRepository<Owner, Long> {
+	
 }

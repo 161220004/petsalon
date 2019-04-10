@@ -4,27 +4,37 @@ import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import lombok.Data;
-
-@Data // create all the getters, setters, equals, hash, and toString methods, based on the fields
 @Entity // This tells Hibernate to make a table out of this class
 public class Service {
-
-    private @Id @GeneratedValue Long id;
-    private Date date;
-    private double fee;
-    private ServiceCategory category;
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    private Long id;
     
-    Service(){
-        this.date = new Date();
-        this.fee = 0;
-		this.category = ServiceCategory.Examination;
-    }
-    Service(Date date, double fee, ServiceCategory category) {
+    private Date date;
+    
+    private Double fee;
+    
+    private ServiceCategory category;
+
+	public Date getDate() {
+		return date;
+	}
+	public void setDate(Date date) {
 		this.date = date;
+	}
+	public Double getFee() {
+		return fee;
+	}
+	public void setFee(Double fee) {
 		this.fee = fee;
+	}
+	public ServiceCategory getCategory() {
+		return category;
+	}
+	public void setCategory(ServiceCategory category) {
 		this.category = category;
-    }
+	}
 }
