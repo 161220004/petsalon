@@ -1,4 +1,57 @@
-（突然发现自己不小心把宠物理发店当成了宠物医院……其实只有 ServiceCategory 的内容有点歪，原理还是一样的，于是就懒得改了……(ㄒoㄒ)）
+# Petsalon v1.3
+
+- 此前版本均还不够“RESTFUL”（大概在 Richardson 的 REST 成熟度模型的 Level 2 ？），这个版本将开始使用HATEOAS（即 Level 3）
+- 突然发现不小心把宠物美容店当成了宠物医院……其实只有 ServiceCategory 的内容有点歪，原理还是一样的，更改 ServiceCategory 之前的运行结果就不改了……
+
+
+
+### HATEOAS
+
+- 以 OwnerController 的 @GetMapping 为例
+
+  （PetController 和 ServiceController 的 @GetMapping 同理）
+
+  ```java
+  @RestController
+  @RequestMapping(path="/owners") 
+  public class OwnerController {
+      ...
+  	@GetMapping(path="")
+  	public @ResponseBody 
+  	Resources<Resource<Owner>> getAllOwners() {
+  		// 先将 ownerRepository.findAll() 从 Iterable<> 转换为 List<>
+  		Iterable<Owner> ownersIt = ownerRepository.findAll();
+  		List<Owner> ownersLs = new ArrayList<>();
+  		ownersIt.forEach(i -> { ownersLs.add(i); });
+  		
+  		List<Resource<Owner>> owners = ownersLs.stream().map(
+  				owner -> new Resource<>(owner, 
+  						linkTo(methodOn(OwnerController.class).getOneOwner(owner.getId())).withSelfRel(),
+  						linkTo(methodOn(OwnerController.class).getAllOwners()).withRel("owners")
+  						)
+  				).collect(Collectors.toList());
+  		
+  		return new Resources<>(owners, linkTo(methodOn(OwnerController.class).getAllOwners()).withSelfRel());
+  	}
+  	
+  	@GetMapping("/{id}")
+  	public @ResponseBody 
+  	Resource<Owner> getOneOwner(@PathVariable Integer id) {
+  		Owner owner = ownerRepository.findById(id)
+  				.orElseThrow(() -> new RuntimeException());
+  
+  		return new Resource<>(owner,
+  			linkTo(methodOn(OwnerController.class).getOneOwner(id)).withSelfRel(),
+  			linkTo(methodOn(OwnerController.class).getAllOwners()).withRel("owners"));
+  	}
+  }
+  ```
+
+  
+
+
+
+
 
 # Petsalon v1.2
 
@@ -66,87 +119,8 @@
   }
   ```
 
-  
 
-### 运行（Postman）
 
-1. Post：http://localhost:8080/owners/add
-
-   ![1.1-post1](img/1.1-post1.png)
-
-   
-
-2. Post：http://localhost:8080/pets/add
-
-   ![1.1-post2](img/1.1-post2.png)
-
-   
-
-3. Post：http://localhost:8080/pets/add
-
-   ![1.1-post3](img/1.1-post3.png)
-
-   
-
-4. Get：http://localhost:8080/owners/all
-
-   ![1.1-get4](img/1.1-get4.png)
-
-   
-
-5. Post：http://localhost:8080/service/add
-
-   ![1.1-post5](img/1.1-post5.png)
-
-   
-
-6. Post：http://localhost:8080/service/add
-
-   ![1.1-post6](img/1.1-post6.png)
-
-   
-
-7. Post：http://localhost:8080/service/add
-
-   ![1.1-post7](img/1.1-post7.png)
-
-   
-
-8. Get：http://localhost:8080/service/all
-
-   ![1.1-get8](img/1.1-get8.png)
-
-   
-
-9. Get：http://localhost:8080/pets/all
-
-   ![1.1-get9](img/1.1-get9.png)
-
-   
-
-10. Get：http://localhost:8080/owners/all
-
-    ![1.1-get10](img/1.1-get10.png)
-
-    
-
-11. DataBase：Owner
-
-    ![1.1-db-owner](img/1.1-db-owner.png)
-
-    
-
-12. DataBase：Pet
-
-    ![1.1-db-pet](img/1.1-db-pet.png)
-
-    
-
-13. DataBase：Service
-
-    ![1.1-db-service](img/1.1-db-service.png)
-
-    
 
 
 
@@ -293,38 +267,4 @@
   	public @ResponseBody Iterable<Service> getAllService() { ... }
   }
   ```
-
-  
-
-### 运行（Postman）
-
-以 <http://localhost:8080/pets/> 为例：
-
-- Get：<http://localhost:8080/pets/all> 
-
-  ![1.0-get0](img/1.0-get0.png)
-
-  可见，当前数据库为空，可查看数据库：
-
-  ![1.0-db0](img/1.0-db0.png)
-
-  
-
-- Post：http://localhost:8080/pets/add
-
-  ![1.0-post1](img/1.0-post1.png)
-
-  成功传上了一个名为“Little White”的猫，查看数据库：
-
-  ![1.0-db1](img/1.0-db1.png)
-
-  刷新网页 <http://localhost:8080/pets/all>，可以看到：
-
-  ![1.0-web1](img/1.0-web1.png)
-
-  
-
-- 终止程序，再次查看数据库，数据没有消失，持久化存储成功
-
-
 

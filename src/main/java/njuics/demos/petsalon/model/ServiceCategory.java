@@ -1,13 +1,12 @@
 package njuics.demos.petsalon.model;
 
 public enum ServiceCategory {
-	// 检查，注射，药物，手术，护理，美容
-	Examination("Examination"),
-	Injection("Injection"),
-	Medicine("Medicine"),
-	Operation("Operation"),
-	Nursing("Nursing"),
-	Cosmetology("Cosmetology");
+	// 清洗，剪毛，染色，装扮，购物
+	Bathing("Bathing"),
+	Cutting("Cutting"),
+	Dyeing("Dyeing"),
+	DressingUp("DressingUp"),
+	Shopping("Shopping");
 
 	private String description;
 	
