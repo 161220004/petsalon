@@ -27,13 +27,11 @@ public class Pet {
 	@ManyToOne(targetEntity=Owner.class)
     @JoinColumn(name="owner", referencedColumnName = "id")
     private Owner owner; // 对应主人
-/*
-	@JsonBackReference // 防止双向关联死循环
-    @OneToMany(targetEntity=Service.class, cascade=CascadeType.ALL, mappedBy="pet")
+
+	//@JsonBackReference // 防止双向关联死循环
+    @OneToMany(targetEntity=Service.class, cascade=CascadeType.ALL)
+	@JoinColumn(name="pet", referencedColumnName = "id")
     private List<Service> serviceList; // 服务列表
-*/    
-	
-	
 
 	public Integer getId() {
 		return id;
@@ -59,13 +57,11 @@ public class Pet {
 	public void setOwner(Owner owner) {
 		this.owner = owner;
 	}
-	/*
 	public List<Service> getServiceList() {
 		return serviceList;
 	}
 	public void setServiceList(List<Service> serviceList) {
 		this.serviceList = serviceList;
 	}
-	*/
 }
 

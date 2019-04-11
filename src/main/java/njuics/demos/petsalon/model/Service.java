@@ -9,7 +9,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity // This tells Hibernate to make a table out of this class
 public class Service {
@@ -17,17 +20,19 @@ public class Service {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer id;
     
+    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern="yyyy-MM-dd")
     private Date date;
     
     private Double fee;
     
     private ServiceCategory category;
-/*    
+    
 	@JsonBackReference // 防止双向关联死循环
 	@ManyToOne(targetEntity=Pet.class)
     @JoinColumn(name="pet", referencedColumnName = "id")
     private Pet pet; // 对应宠物
-*/
+
 	public Integer getId() {
 		return id;
 	}
@@ -52,12 +57,10 @@ public class Service {
 	public void setCategory(ServiceCategory category) {
 		this.category = category;
 	}
-	/*
 	public Pet getPet() {
 		return pet;
 	}
 	public void setPet(Pet pet) {
 		this.pet = pet;
 	}
-	*/
 }
