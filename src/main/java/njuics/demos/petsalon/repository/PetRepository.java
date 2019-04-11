@@ -6,6 +6,6 @@ import njuics.demos.petsalon.model.Pet;
 //This will be AUTO IMPLEMENTED by Spring into a Bean called petRepository
 //CRUD refers Create, Read, Update, Delete
 
-public interface PetRepository extends CrudRepository<Pet, Long> {
+public interface PetRepository extends CrudRepository<Pet, Integer> {
 
 }

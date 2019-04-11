@@ -1,3 +1,10 @@
+# Petsalon v1.1
+
+- 添加 Owner - Pet 的一对多关联
+- 待解决：Pet - Service 的一对多关联（疑似冲突）
+
+
+
 # Petsalon v1.0
 
 - 三组 Model - Repository - Controller：

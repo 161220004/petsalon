@@ -6,6 +6,6 @@ import njuics.demos.petsalon.model.Service;
 //This will be AUTO IMPLEMENTED by Spring into a Bean called serviceRepository
 //CRUD refers Create, Read, Update, Delete
 
-public interface ServiceRepository extends CrudRepository<Service, Long> {
+public interface ServiceRepository extends CrudRepository<Service, Integer> {
 	
 }
