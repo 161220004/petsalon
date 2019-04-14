@@ -1,3 +1,13 @@
+# Petsalon v1.4
+
+- 添加 Delete 和 Put（删除和刷新功能）
+
+
+
+
+
+
+
 # Petsalon v1.3
 
 - 此前版本均还不够“RESTFUL”（大概在 Richardson 的 REST 成熟度模型的 Level 2 ？），这个版本将开始使用HATEOAS（即 Level 3）
