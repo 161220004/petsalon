@@ -1,15 +1,10 @@
 package njuics.demos.petsalon.controller;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.Resources;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import njuics.demos.petsalon.model.Service;
 import njuics.demos.petsalon.repository.ServiceRepository;
+import njuics.demos.petsalon.resource.ServiceResource;
 
 @RestController
 @RequestMapping(path="/service") // This means URL's start with /service
@@ -40,31 +36,26 @@ public class ServiceController {
 	
 	@GetMapping(path="")
 	public @ResponseBody 
-	Resources<Resource<Service>> getAllService() {
+	List<ServiceResource> getAllService() {
 		// 先将 repository.findAll() 从 Iterable<> 转换为 List<>
 		Iterable<Service> serviceIt = repository.findAll();
 		List<Service> serviceLs = new ArrayList<>();
 		serviceIt.forEach(i -> { serviceLs.add(i); });
 		
-		List<Resource<Service>> service = serviceLs.stream().map(
-				serv -> new Resource<>(serv, 
-						linkTo(methodOn(ServiceController.class).getOneService(serv.getId())).withSelfRel(),
-						linkTo(methodOn(ServiceController.class).getAllService()).withRel("service")
-						)
+		List<ServiceResource> service = serviceLs.stream().map(
+				serv -> new ServiceResource(serv)
 				).collect(Collectors.toList());
 		
-		return new Resources<>(service, linkTo(methodOn(ServiceController.class).getAllService()).withSelfRel());
+		return service;
 	}
 	
 	@GetMapping("/{id}")
 	public @ResponseBody 
-	Resource<Service> getOneService(@PathVariable Integer id) {
+	ServiceResource getOneService(@PathVariable Integer id) {
 		Service service = repository.findById(id)
 				.orElseThrow(() -> new RuntimeException());
 
-		return new Resource<>(service,
-			linkTo(methodOn(ServiceController.class).getOneService(id)).withSelfRel(),
-			linkTo(methodOn(ServiceController.class).getAllService()).withRel("service"));
+		return new ServiceResource(service);
 	}
 	
 	@PutMapping("/{id}")

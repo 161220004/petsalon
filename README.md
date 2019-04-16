@@ -1,3 +1,17 @@
+# Petsalon v2.1
+
+- 添加前端页面
+
+  - 在文件夹 client 的路径下打开控制台，运行 `yarn` 和 `yarn start` ，并访问 <http://localhost:8000>
+
+  - 当前可用的只有 [Owners](http://localhost:8000/owners) 部分的：查看全部列表、新建，删除功能
+
+-  发现刷新功能（PUT）存在 bug，尚未修改
+
+
+
+
+
 # Petsalon v1.4
 
 - 添加 Delete 和 Put（删除和刷新功能）

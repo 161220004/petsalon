@@ -1,15 +1,10 @@
 package njuics.demos.petsalon.controller;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Resource;
-import org.springframework.hateoas.Resources;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import njuics.demos.petsalon.model.Pet;
 import njuics.demos.petsalon.repository.PetRepository;
+import njuics.demos.petsalon.resource.PetResource;
 
 @Controller    // This means that this class is a Controller
 @RequestMapping(path="/pets") // This means URL's start with /pets
@@ -40,31 +36,26 @@ public class PetController {
 	
 	@GetMapping(path="")
 	public @ResponseBody 
-	Resources<Resource<Pet>> getAllPets() {
+	List<PetResource> getAllPets() {
 		// 先将 repository.findAll() 从 Iterable<> 转换为 List<>
 		Iterable<Pet> petsIt = repository.findAll();
 		List<Pet> petsLs = new ArrayList<>();
 		petsIt.forEach(i -> { petsLs.add(i); });
 		
-		List<Resource<Pet>> pets = petsLs.stream().map(
-				pet -> new Resource<>(pet, 
-						linkTo(methodOn(PetController.class).getOnePet(pet.getId())).withSelfRel(),
-						linkTo(methodOn(PetController.class).getAllPets()).withRel("pets")
-						)
+		List<PetResource> pets = petsLs.stream().map(
+				pet -> new PetResource(pet)
 				).collect(Collectors.toList());
 		
-		return new Resources<>(pets, linkTo(methodOn(PetController.class).getAllPets()).withSelfRel());
+		return pets;
 	}
 
 	@GetMapping("/{id}")
 	public @ResponseBody 
-	Resource<Pet> getOnePet(@PathVariable Integer id) {
+	PetResource getOnePet(@PathVariable Integer id) {
 		Pet pet = repository.findById(id)
 				.orElseThrow(() -> new RuntimeException());
 
-		return new Resource<>(pet,
-			linkTo(methodOn(PetController.class).getOnePet(id)).withSelfRel(),
-			linkTo(methodOn(PetController.class).getAllPets()).withRel("pets"));
+		return new PetResource(pet);
 	}
 	
 	@PutMapping("/{id}")
