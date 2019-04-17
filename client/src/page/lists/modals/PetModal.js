@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import { Modal, Form, Input } from 'antd';
+import { Modal, Form, Input, Select } from 'antd';
+
+const { Option } = Select;
 
 const FormItem = Form.Item;
 
-class OwnerModal extends Component {
+class PetModal extends Component {
 
   constructor(props) {
     super(props);
@@ -35,11 +37,15 @@ class OwnerModal extends Component {
     });
   };
 
+  onChange = (value) => {
+    console.log(`get ${value} from Select`);
+  }
+
   render() {
     const { children } = this.props;
     const { getFieldDecorator } = this.props.form;
-    //const { name, url, pets_url } = this.props.record;
-    const { name } = this.props.record;
+    //const { name, type, url, owner_url } = this.props.record;
+    const { name, type } = this.props.record;
     const formItemLayout = {
       labelCol: { span: 6 },
       wrapperCol: { span: 14 },
@@ -51,13 +57,13 @@ class OwnerModal extends Component {
           { children }
         </span>
         <Modal
-          title="Owner"
+          title="Pet"
           visible={this.state.visible}
           onOk={this.ok}
           onCancel={this.hideModal}
         >
           <Form horizontal="true" onSubmit={this.ok}>
-            <FormItem {...formItemLayout} label="姓名" >
+            <FormItem {...formItemLayout} label="昵称">
               {
                 getFieldDecorator('name', {
                   initialValue: name,
@@ -65,8 +71,20 @@ class OwnerModal extends Component {
                 })(<Input />)
               }
             </FormItem>
-
-
+            <Form.Item {...formItemLayout} label="种类"> 
+              {
+                getFieldDecorator('type', {
+                  initialValue: type,
+                  rules: [{ required: true, type: 'string', message: '请选择宠物种类' }],
+                })(
+                <Select placeholder="种类" onChange={this.onChange}>
+                  <Option value="Dog">狗</Option>
+                  <Option value="Cat">猫</Option>
+                  <Option value="Hamster">仓鼠</Option>
+                  <Option value="Bird">鸟</Option>
+                </Select>)
+              }
+            </Form.Item>
           </Form>
         </Modal>
       </span>
@@ -83,14 +101,14 @@ class OwnerModal extends Component {
                 })(<Input />)
               }
             </FormItem>
-            <FormItem {...formItemLayout} label="宠物" >
+            <FormItem {...formItemLayout} label="主人" >
               {
-                getFieldDecorator('pets_url', {
-                  initialValue: pets_url,
+                getFieldDecorator('owner_url', {
+                  initialValue: owner_url,
                   rules: [{ type: 'url' }],
                 })(<Input />)
               }
             </FormItem>
             
  */
-export default Form.create()(OwnerModal);
+export default Form.create()(PetModal);

@@ -20,15 +20,15 @@ public class Service {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer id;
     
-    @JsonFormat(timezone = "GMT+8",pattern = "yyyy-MM-dd")
-    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'") // 后台到前台的时间格式的转换
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'") // 前台到后台的时间格式的转换
     private Date date;
     
     private Double fee;
     
     private ServiceCategory category;
     
-	@JsonBackReference // 防止双向关联死循环
+	//@JsonBackReference // 防止双向关联死循环
 	@ManyToOne(targetEntity=Pet.class)
     @JoinColumn(name="pet", referencedColumnName = "id")
     private Pet pet; // 对应宠物

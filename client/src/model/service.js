@@ -2,31 +2,31 @@ import request from '../util/request';
 
 export default {
 
-  namespace: 'owners',
+  namespace: 'service',
 
   state: {
-    ownersList: []
+    serviceList: []
   },
 
   effects: {
     *queryList({ _ }, { call, put }) {
-      const rsp = yield call(request, '/api/owners');
+      const rsp = yield call(request, '/api/service');
       console.log('get/refresh page:');
       console.log(rsp);
-      yield put({ type: 'saveList', payload: { ownersList: rsp } });
+      yield put({ type: 'saveList', payload: { serviceList: rsp } });
     },
 
     *queryOne({ _ }, { call, put }) {
-      const rsp = yield call(request, `/api/owners/${id}`);
+      const rsp = yield call(request, `/api/service/${id}`);
       console.log('get/refresh page:');
       console.log(rsp);
-      yield put({ type: 'saveList', payload: { ownersList: rsp } });
+      yield put({ type: 'saveList', payload: { serviceList: rsp } });
     },
 
     *editOne({ payload: { id, data } }, { call, put }) {
       console.log(`model - editOne: payload id = ${id}, data = ${JSON.stringify(data)}`);
       console.log('request, get response:');
-      const rsp = yield call(request, `/api/owners/${id}`, {
+      const rsp = yield call(request, `/api/service/${id}`, {
         headers: {
           'content-type': 'application/json',
         },
@@ -42,7 +42,7 @@ export default {
     *deleteOne({ payload: id }, { call, put }) {
       console.log(`model - deleteOne: payload id = ${id}`);
       console.log('request, get response:');
-      const rsp = yield call(request, `/api/owners/${id}`, {
+      const rsp = yield call(request, `/api/service/${id}`, {
         method: 'DELETE'
       });
       console.log(rsp);
@@ -54,7 +54,7 @@ export default {
     *addOne({ payload: data }, { call, put }) {
       console.log(`model - addOne: payload data = ${JSON.stringify(data)}`);
       console.log('request, get response:');
-      const rsp = yield call(request, '/api/owners', {
+      const rsp = yield call(request, '/api/service', {
         headers: {
           'content-type': 'application/json',
         },
@@ -69,10 +69,10 @@ export default {
   },
 
   reducers: {
-    saveList(state, { payload: { ownersList } }) {
+    saveList(state, { payload: { serviceList } }) {
       return {
         ...state,
-        ownersList,
+        serviceList,
       }
     },
   },

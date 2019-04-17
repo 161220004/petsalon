@@ -8,6 +8,7 @@ export default () =>
     <ul className={styles.list}>
       <h3>Pages</h3>
       <li><Link to="/owners">Owners</Link></li>
-      <li><Link to="/locale">/locale</Link></li>
+      <li><Link to="/pets">Pets</Link></li>
+      <li><Link to="/service">Service</Link></li>
     </ul>
   </div>

@@ -20,7 +20,7 @@ public class Owner {
     
     private String name;
 
-	//@JsonBackReference // 防止双向关联死循环
+	@JsonBackReference // 防止双向关联死循环
     @OneToMany(targetEntity=Pet.class, cascade=CascadeType.ALL)
 	@JoinColumn(name="owner", referencedColumnName = "id")
     private Set<Pet> petSet; // 宠物集合

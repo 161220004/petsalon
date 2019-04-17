@@ -2,11 +2,11 @@ import React from 'react';
 import { Table, Popconfirm, Button, Form, Input } from 'antd';
 import { connect } from 'dva';
 import styles from './index.css';
-import OwnerModal from './modals/OwnerModal';
+import PetModal from './modals/PetModal';
 
 const FormItem = Form.Item;
 
-class OwnerList extends React.Component {
+class PetList extends React.Component {
   state = {
     visible: false,
     id: null,
@@ -14,12 +14,16 @@ class OwnerList extends React.Component {
 
   columns = [
     {
-      title: '姓名',
+      title: '昵称',
       dataIndex: 'name',
     },
     {
       title: '编号',
       dataIndex: 'id',
+    },
+    {
+      title: '种类',
+      dataIndex: 'type',
     },
     /*
     {
@@ -32,8 +36,8 @@ class OwnerList extends React.Component {
       },
     },
     {
-      title: '宠物',
-      dataIndex: 'pets_url',
+      title: '主人',
+      dataIndex: 'owner_url',
       render(value) {
         return (
           <a href={value}>{value}</a>
@@ -46,9 +50,9 @@ class OwnerList extends React.Component {
       key: 'operation',
       render: (_, record) => (
         <span className={styles.operation}>
-          <OwnerModal record={record} onOk={this.editRow.bind(null, record.id)}>
+          <PetModal record={record} onOk={this.editRow.bind(null, record.id)}>
             <a>修改</a>
-          </OwnerModal>
+          </PetModal>
           <Popconfirm title="确认删除？" onConfirm={this.deleteRow.bind(null, record.id)}>
             <a href="">删除</a>
           </Popconfirm>
@@ -59,7 +63,7 @@ class OwnerList extends React.Component {
 
   componentDidMount() {
     this.props.dispatch({
-      type: 'owners/queryList',
+      type: 'pets/queryList',
     });
   }
 
@@ -69,14 +73,14 @@ class OwnerList extends React.Component {
 
   addRow = (data) => {
     this.props.dispatch({
-      type: 'owners/addOne',
+      type: 'pets/addOne',
       payload: data,
     });
   };
 
   editRow = (id, data) => {
     this.props.dispatch({
-      type: 'owners/editOne',
+      type: 'pets/editOne',
       payload: { id, data },
     });
   };
@@ -84,22 +88,22 @@ class OwnerList extends React.Component {
   deleteRow = (id) => {
     console.log(`lists - deleteRow : payload id = ${id}`);
     this.props.dispatch({
-      type: 'owners/deleteOne',
+      type: 'pets/deleteOne',
       payload: id,
     });
   };
 
   render() {
     const { visible, id } = this.state;
-    const { ownersList, ownersLoading, form: { getFieldDecorator } } = this.props;
+    const { petsList, petsLoading, form: { getFieldDecorator } } = this.props;
 
     return (
       <div>
-        <Table columns={this.columns} dataSource={ownersList} loading={ownersLoading} rowKey="id" />
+        <Table columns={this.columns} dataSource={petsList} loading={petsLoading} rowKey="id" />
 
-        <OwnerModal record={{}} onOk={this.addRow}>
+        <PetModal record={{}} onOk={this.addRow}>
             <Button type="primary">新建</Button>
-        </OwnerModal>
+        </PetModal>
         
       </div>
     );
@@ -108,9 +112,9 @@ class OwnerList extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    ownersList: state.owners.ownersList,
-    ownersLoading: state.loading.effects['owners/queryList']
+    petsList: state.pets.petsList,
+    petsLoading: state.loading.effects['pets/queryList']
   };
 }
 
-export default connect(mapStateToProps)(Form.create()(OwnerList));
+export default connect(mapStateToProps)(Form.create()(PetList));

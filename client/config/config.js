@@ -20,9 +20,10 @@ export default {
         },
         { path: 'owners', component: './lists/owners.js' },
         { path: 'owners/:id', component: './lists/owners.js' },
-        { path: 'ownercards', component: './cards/owners.js' },
-        { path: 'typescript', component: './tsdemo' },
-        { path: 'locale', component: './locale' }
+        { path: 'pets', component: './lists/pets.js' },
+        { path: 'pets/:id', component: './lists/pets.js' },
+        { path: 'service', component: './lists/service.js' },
+        { path: 'service/:id', component: './lists/service.js' },
       ]
     }
   ],

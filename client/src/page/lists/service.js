@@ -2,11 +2,11 @@ import React from 'react';
 import { Table, Popconfirm, Button, Form, Input } from 'antd';
 import { connect } from 'dva';
 import styles from './index.css';
-import OwnerModal from './modals/OwnerModal';
+import ServiceModal from './modals/ServiceModal';
 
 const FormItem = Form.Item;
 
-class OwnerList extends React.Component {
+class ServiceList extends React.Component {
   state = {
     visible: false,
     id: null,
@@ -14,12 +14,20 @@ class OwnerList extends React.Component {
 
   columns = [
     {
-      title: '姓名',
-      dataIndex: 'name',
+      title: '服务类型',
+      dataIndex: 'category',
     },
     {
       title: '编号',
       dataIndex: 'id',
+    },
+    {
+      title: '日期',
+      dataIndex: 'date',
+    },
+    {
+      title: '费用',
+      dataIndex: 'fee',
     },
     /*
     {
@@ -33,7 +41,7 @@ class OwnerList extends React.Component {
     },
     {
       title: '宠物',
-      dataIndex: 'pets_url',
+      dataIndex: 'pet_url',
       render(value) {
         return (
           <a href={value}>{value}</a>
@@ -46,9 +54,9 @@ class OwnerList extends React.Component {
       key: 'operation',
       render: (_, record) => (
         <span className={styles.operation}>
-          <OwnerModal record={record} onOk={this.editRow.bind(null, record.id)}>
+          <ServiceModal record={record} onOk={this.editRow.bind(null, record.id)}>
             <a>修改</a>
-          </OwnerModal>
+          </ServiceModal>
           <Popconfirm title="确认删除？" onConfirm={this.deleteRow.bind(null, record.id)}>
             <a href="">删除</a>
           </Popconfirm>
@@ -59,7 +67,7 @@ class OwnerList extends React.Component {
 
   componentDidMount() {
     this.props.dispatch({
-      type: 'owners/queryList',
+      type: 'service/queryList',
     });
   }
 
@@ -69,14 +77,14 @@ class OwnerList extends React.Component {
 
   addRow = (data) => {
     this.props.dispatch({
-      type: 'owners/addOne',
+      type: 'service/addOne',
       payload: data,
     });
   };
 
   editRow = (id, data) => {
     this.props.dispatch({
-      type: 'owners/editOne',
+      type: 'service/editOne',
       payload: { id, data },
     });
   };
@@ -84,22 +92,22 @@ class OwnerList extends React.Component {
   deleteRow = (id) => {
     console.log(`lists - deleteRow : payload id = ${id}`);
     this.props.dispatch({
-      type: 'owners/deleteOne',
+      type: 'service/deleteOne',
       payload: id,
     });
   };
 
   render() {
     const { visible, id } = this.state;
-    const { ownersList, ownersLoading, form: { getFieldDecorator } } = this.props;
+    const { serviceList, serviceLoading, form: { getFieldDecorator } } = this.props;
 
     return (
       <div>
-        <Table columns={this.columns} dataSource={ownersList} loading={ownersLoading} rowKey="id" />
+        <Table columns={this.columns} dataSource={serviceList} loading={serviceLoading} rowKey="id" />
 
-        <OwnerModal record={{}} onOk={this.addRow}>
+        <ServiceModal record={{}} onOk={this.addRow}>
             <Button type="primary">新建</Button>
-        </OwnerModal>
+        </ServiceModal>
         
       </div>
     );
@@ -108,9 +116,9 @@ class OwnerList extends React.Component {
 
 function mapStateToProps(state) {
   return {
-    ownersList: state.owners.ownersList,
-    ownersLoading: state.loading.effects['owners/queryList']
+    serviceList: state.service.serviceList,
+    serviceLoading: state.loading.effects['service/queryList']
   };
 }
 
-export default connect(mapStateToProps)(Form.create()(OwnerList));
+export default connect(mapStateToProps)(Form.create()(ServiceList));

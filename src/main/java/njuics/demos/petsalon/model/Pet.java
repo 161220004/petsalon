@@ -23,12 +23,12 @@ public class Pet {
 
     private PetType type;
     
-	@JsonBackReference // 防止双向关联死循环
+	//@JsonBackReference // 防止双向关联死循环
 	@ManyToOne(targetEntity=Owner.class)
     @JoinColumn(name="owner", referencedColumnName = "id")
     private Owner owner; // 对应主人
 
-	//@JsonBackReference // 防止双向关联死循环
+	@JsonBackReference // 防止双向关联死循环
     @OneToMany(targetEntity=Service.class, cascade=CascadeType.ALL)
 	@JoinColumn(name="pet", referencedColumnName = "id")
     private List<Service> serviceList; // 服务列表

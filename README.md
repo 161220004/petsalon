@@ -1,3 +1,82 @@
+# Petsalon v2.2
+
+- 前端 client
+
+  - [Owners](http://localhost:8000/owners) ，[Pets](http://localhost:8000/pets) ，[Service](http://localhost:8000/service) 三个页面均具有功能：
+    - 查看全部列表
+    - 新建列表项
+    - 删除列表项
+    - 修改列表项
+  - 细节：
+    - 新建/修改列表项时，弹出的 Modal 中有些是必填项目
+    - 每个列表项在修改时，弹出的 Modal 中的初始值为修改前的原数值
+    - 编号（id）不可修改（在新建时自动生成）
+    - Pets 的宠物类型以及 Service 的服务类型使用 SELECT（下拉菜单）
+    - Service 的 date 项使用 DatePicker，格式转换使用 UTC（"YYYY-MM-DD'T'HH:mm:ss.SSS'Z'"）
+    - Service 的 fee 项使用正则表达式来确保输入为 Unsigned Double（pattern: /^(0|[1-9][0-9]*)(\.[0-9]+)?$/）
+
+- 后端
+
+  - 修复了 PUT 过程的 bug
+
+  - 简化 HATEOAS 的相关代码
+
+  - Service 类的日期格式更改为 UTC 以适应前端
+
+    ```java
+        @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'") // 后台到前台的时间格式的转换
+        @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'") // 前台到后台的时间格式的转换
+        private Date date;
+    ```
+
+  - 调整部分细节
+
+
+
+### 页面展示
+
+![0-home](img/0-home.png)
+
+下面以 [Service](http://localhost:8000/service) 为例：
+
+- 创建
+
+  ![3-service-create-1](img/3-service-create-1.png)
+
+  ![3-service-create-2](img/3-service-create-2.png)
+
+  ![3-service-create-3-1](img/3-service-create-3-1.png)
+
+  ![3-service-create-3-2](img/3-service-create-3-2.png)
+
+  
+
+- 显示列表
+
+  ![3-service-show](img/3-service-show.png)
+
+  
+
+- 修改
+
+  ![3-service-edit-1](img/3-service-edit-1.png)
+
+  ![3-service-edit-2](img/3-service-edit-2.png)
+
+  
+
+- 删除
+
+  ![3-service-delete-1](img/3-service-delete-1.png)
+
+  ![3-service-delete-2](img/3-service-delete-2.png)
+
+
+
+
+
+
+
 # Petsalon v2.1
 
 - 添加前端页面
@@ -6,7 +85,7 @@
 
   - 当前可用的只有 [Owners](http://localhost:8000/owners) 部分的：查看全部列表、新建，删除功能
 
--  发现刷新功能（PUT）存在 bug，尚未修改
+- 发现修改功能（PUT）存在 bug，尚未修改
 
 
 
