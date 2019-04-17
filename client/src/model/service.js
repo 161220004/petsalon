@@ -10,15 +10,15 @@ export default {
 
   effects: {
     *queryList({ _ }, { call, put }) {
+      console.log('model - queryList: get/refresh page:');
       const rsp = yield call(request, '/api/service');
-      console.log('get/refresh page:');
       console.log(rsp);
       yield put({ type: 'saveList', payload: { serviceList: rsp } });
     },
 
     *queryOne({ _ }, { call, put }) {
+      console.log('model - queryOne: get/refresh page:');
       const rsp = yield call(request, `/api/service/${id}`);
-      console.log('get/refresh page:');
       console.log(rsp);
       yield put({ type: 'saveList', payload: { serviceList: rsp } });
     },

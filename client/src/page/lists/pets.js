@@ -6,6 +6,11 @@ import PetModal from './modals/PetModal';
 
 const FormItem = Form.Item;
 
+// 不论Owner的所有Pets混杂列表
+// http://localhost:8000/pets
+// 可以修改和删除
+// 不能新建
+
 class PetList extends React.Component {
   state = {
     visible: false,
@@ -25,26 +30,20 @@ class PetList extends React.Component {
       title: '种类',
       dataIndex: 'type',
     },
-    /*
-    {
-      title: '链接',
-      dataIndex: 'url',
-      render(value) {
-        return (
-          <a href={value}>{value}</a>
-        );
-      },
-    },
     {
       title: '主人',
-      dataIndex: 'owner_url',
-      render(value) {
+      dataIndex: 'links',
+      render(links) {
+        console.log('get links[]:');
+        console.log(links);
+        var apiLink = links[2].href;
+        var link = JSON.stringify(apiLink).replace(/(\"|\/api)/g, '').replace(/(8080)/g, '8000');
+        console.log(`get link: ${apiLink}`);
         return (
-          <a href={value}>{value}</a>
+          <a href={link}>{link}</a>
         );
       },
     },
-    */
     {
       title: 'Operation',
       key: 'operation',
@@ -67,29 +66,27 @@ class PetList extends React.Component {
     });
   }
 
-  showModal = () => {
-    this.setState({ visible: true });
-  };
-
-  addRow = (data) => {
+  reloadAll = () => {
     this.props.dispatch({
-      type: 'pets/addOne',
-      payload: data,
+      type: 'pets/queryList',
     });
-  };
+  }
 
   editRow = (id, data) => {
     this.props.dispatch({
       type: 'pets/editOne',
       payload: { id, data },
+    }).then(() => {
+      this.reloadAll();
     });
   };
 
   deleteRow = (id) => {
-    console.log(`lists - deleteRow : payload id = ${id}`);
     this.props.dispatch({
       type: 'pets/deleteOne',
       payload: id,
+    }).then(() => {
+      this.reloadAll();
     });
   };
 
@@ -100,11 +97,6 @@ class PetList extends React.Component {
     return (
       <div>
         <Table columns={this.columns} dataSource={petsList} loading={petsLoading} rowKey="id" />
-
-        <PetModal record={{}} onOk={this.addRow}>
-            <Button type="primary">新建</Button>
-        </PetModal>
-        
       </div>
     );
   }

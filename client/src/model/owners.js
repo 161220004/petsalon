@@ -5,50 +5,23 @@ export default {
   namespace: 'owners',
 
   state: {
+    owner: [],
     ownersList: []
   },
 
   effects: {
     *queryList({ _ }, { call, put }) {
+      console.log('model - queryList: get/refresh page:');
       const rsp = yield call(request, '/api/owners');
-      console.log('get/refresh page:');
       console.log(rsp);
       yield put({ type: 'saveList', payload: { ownersList: rsp } });
     },
 
-    *queryOne({ _ }, { call, put }) {
+    *queryOne({ payload: { id } }, { call, put }) {
+      console.log('model - queryOne: get/refresh page:');
       const rsp = yield call(request, `/api/owners/${id}`);
-      console.log('get/refresh page:');
       console.log(rsp);
-      yield put({ type: 'saveList', payload: { ownersList: rsp } });
-    },
-
-    *editOne({ payload: { id, data } }, { call, put }) {
-      console.log(`model - editOne: payload id = ${id}, data = ${JSON.stringify(data)}`);
-      console.log('request, get response:');
-      const rsp = yield call(request, `/api/owners/${id}`, {
-        headers: {
-          'content-type': 'application/json',
-        },
-        method: 'PUT',
-        body: JSON.stringify(data)
-      });
-      console.log(rsp);
-      console.log('succfully editOne');
-      yield put({ type: 'queryList' });
-      return rsp;
-    },
-
-    *deleteOne({ payload: id }, { call, put }) {
-      console.log(`model - deleteOne: payload id = ${id}`);
-      console.log('request, get response:');
-      const rsp = yield call(request, `/api/owners/${id}`, {
-        method: 'DELETE'
-      });
-      console.log(rsp);
-      console.log('succfully deleteOne');
-      yield put({ type: 'queryList' });
-      return rsp;
+      yield put({ type: 'saveOne', payload: { owner: rsp } });
     },
 
     *addOne({ payload: data }, { call, put }) {
@@ -63,7 +36,32 @@ export default {
       });
       console.log(rsp);
       console.log('successfully addOne');
-      yield put({ type: 'queryList' });
+      return rsp;
+    },
+    
+    *editOne({ payload: { id, data } }, { call, put }) {
+      console.log(`model - editOne: payload id = ${id}, data = ${JSON.stringify(data)}`);
+      console.log('request, get response:');
+      const rsp = yield call(request, `/api/owners/${id}`, {
+        headers: {
+          'content-type': 'application/json',
+        },
+        method: 'PUT',
+        body: JSON.stringify(data)
+      });
+      console.log(rsp);
+      console.log('succfully editOne');
+      return rsp;
+    },
+
+    *deleteOne({ payload: id }, { call, put }) {
+      console.log(`model - deleteOne: payload id = ${id}`);
+      console.log('request, get response:');
+      const rsp = yield call(request, `/api/owners/${id}`, {
+        method: 'DELETE'
+      });
+      console.log(rsp);
+      console.log('succfully deleteOne');
       return rsp;
     },
   },
@@ -73,6 +71,13 @@ export default {
       return {
         ...state,
         ownersList,
+      }
+    },
+    
+    saveOne(state, { payload: { owner } }) {
+      return {
+        ...state,
+        owner,
       }
     },
   },

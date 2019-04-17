@@ -1,3 +1,70 @@
+# Petsalon v2.3
+
+- 前端 client
+
+  - 增加 Owner 页面与 Pet 页面的联系：
+
+    - 从 Owners 列表的页面 <http://localhost:8000/owners> 可跳转到任一个 Owner 的详细信息页面：
+
+      ![1-1-owners](img/1-1-owners.png)
+
+    - Owner 的详细信息页面为 <http://localhost:8000/owners/{id}>，展示了 Owner 个人信息以及该 Owner 拥有的 Pets 列表：
+
+      ![1-1-ownerpets1](img/1-1-ownerpets1.png)
+
+      ![1-1-ownerpets5](img/1-1-ownerpets5.png)
+
+    - Owner 详细信息页面的超链接（Back to Owners List）可回到 Owners 列表
+
+    - Pets 的混合列表（即不论其 Owner 是谁全都混在一起的表）地址依然在 <http://localhost:8000/pets>：
+
+      ![1-2-pets](img/1-2-pets.png)
+
+    - 从 Pets 混合列表的“主人”列，可以到达 Pet 对应 Owner 的详细信息页面
+
+    - 取消 Pets 的混合列表页面的新建宠物功能（因为难以与 Owner 绑定），新建宠物功能转移到 Owner 的详细信息页面上
+
+    
+
+- 后端
+
+  - 根据前端页面关系的变动，更改一下 api 地址
+
+  - PetController 类新增方法，供 Owner 获取其拥有的部分宠物列表：
+
+    ```java
+    	@GetMapping(path="/owners/{ownerId}/pets")
+    	public @ResponseBody // 用于在Owner的详细信息页面上显示宠物列表
+    	List<Resource<Pet>> getMyPets(@PathVariable Integer ownerId) {
+    		Iterable<Pet> petsIt = petRepository.findAll();
+    		List<Pet> petsLs = new ArrayList<>();
+    		petsIt.forEach(i -> { 
+    			if (i.getOwner().getId() == ownerId) // 筛选：仅获取当前owner对应的pets
+    				petsLs.add(i); 
+    		});
+    		List<Resource<Pet>> pets = petsLs.stream().map(
+    				pet -> toResource(pet)
+    				).collect(Collectors.toList());
+    		return pets;
+    	}
+    	@PostMapping(path="/owners/{ownerId}/pets")
+    	public @ResponseBody // 用于在Owner的详细信息页面上新建宠物
+    	Pet addNewPet (@RequestBody Pet pet, @PathVariable Integer ownerId) {
+    		// @ResponseBody means the returned String is the response, not a view name
+    		// @RequestParam means it is a parameter from the GET or POST request
+    		pet.setOwner(ownerRepository.findById(ownerId)
+    				.orElseThrow(() -> new RuntimeException()));
+    		petRepository.save(pet);
+    		return pet;
+    	}
+    ```
+
+    
+
+
+
+
+
 # Petsalon v2.2
 
 - 前端 client

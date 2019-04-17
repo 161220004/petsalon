@@ -57,6 +57,26 @@ public class ServiceController {
 		return toResource(service);
 	}
 
+	/*
+	@GetMapping(path="/pets/{id}/service")
+	public @ResponseBody 
+	List<Resource<Service>> getMyService(@PathVariable Integer id) {
+		// 先将 serviceRepository.findAll() 从 Iterable<> 转换为 List<>
+		Iterable<Service> serviceIt = serviceRepository.findAll();
+		List<Service> serviceLs = new ArrayList<>();
+		serviceIt.forEach(i -> { 
+			if (i.getPet().getId() == id) // 筛选：仅获取当前pet对应的service
+				serviceLs.add(i); 
+			});
+		
+		List<Resource<Service>> service = serviceLs.stream().map(
+				serv -> ServiceController.toResource(serv)
+				).collect(Collectors.toList());
+		
+		return service;
+	}
+	*/
+	
 	@PostMapping(path="/service")
 	public @ResponseBody 
 	Service addNewService (@RequestBody Service service) {

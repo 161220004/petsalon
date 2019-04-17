@@ -21,26 +21,20 @@ class OwnerList extends React.Component {
       title: '编号',
       dataIndex: 'id',
     },
-    /*
     {
       title: '链接',
-      dataIndex: 'url',
-      render(value) {
+      dataIndex: 'links',
+      render(links) {
+        //console.log('get links[]:');
+        //console.log(links);
+        var apiLink = links[0].href;
+        var link = JSON.stringify(apiLink).replace(/(\"|\/api)/g, '').replace(/(8080)/g, '8000');
+        //console.log(`get link: ${apiLink}`);
         return (
-          <a href={value}>{value}</a>
+          <a href={link}>{link}</a>
         );
       },
     },
-    {
-      title: '宠物',
-      dataIndex: 'pets_url',
-      render(value) {
-        return (
-          <a href={value}>{value}</a>
-        );
-      },
-    },
-    */
     {
       title: 'Operation',
       key: 'operation',
@@ -63,14 +57,18 @@ class OwnerList extends React.Component {
     });
   }
 
-  showModal = () => {
-    this.setState({ visible: true });
-  };
+  reloadAll = () => {
+    this.props.dispatch({
+      type: 'owners/queryList',
+    });
+  }
 
   addRow = (data) => {
     this.props.dispatch({
       type: 'owners/addOne',
       payload: data,
+    }).then(() => {
+      this.reloadAll();
     });
   };
 
@@ -78,14 +76,17 @@ class OwnerList extends React.Component {
     this.props.dispatch({
       type: 'owners/editOne',
       payload: { id, data },
+    }).then(() => {
+      this.reloadAll();
     });
   };
 
   deleteRow = (id) => {
-    console.log(`lists - deleteRow : payload id = ${id}`);
     this.props.dispatch({
       type: 'owners/deleteOne',
       payload: id,
+    }).then(() => {
+      this.reloadAll();
     });
   };
 

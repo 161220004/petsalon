@@ -10,17 +10,32 @@ export default {
 
   effects: {
     *queryList({ _ }, { call, put }) {
+      console.log('model - queryList: get/refresh page:');
       const rsp = yield call(request, '/api/pets');
-      console.log('get/refresh page:');
       console.log(rsp);
       yield put({ type: 'saveList', payload: { petsList: rsp } });
     },
 
-    *queryOne({ _ }, { call, put }) {
-      const rsp = yield call(request, `/api/pets/${id}`);
-      console.log('get/refresh page:');
+    *queryMine({ payload: { ownerId } }, { call, put }) {
+      console.log('model - queryMine: get/refresh page:');
+      const rsp = yield call(request, `/api/owners/${ownerId}/pets`);
       console.log(rsp);
       yield put({ type: 'saveList', payload: { petsList: rsp } });
+    },
+
+    *addOne({ payload: { ownerId, data } }, { call, put }) {
+      console.log(`model - addOne: payload ownerId = ${ownerId}, data = ${JSON.stringify(data)}`);
+      console.log('request, get response:');
+      const rsp = yield call(request, `/api/owners/${ownerId}/pets`, {
+        headers: {
+          'content-type': 'application/json',
+        },
+        method: 'POST',
+        body: JSON.stringify(data),
+      });
+      console.log(rsp);
+      console.log('successfully addOne');
+      return rsp;
     },
 
     *editOne({ payload: { id, data } }, { call, put }) {
@@ -35,7 +50,6 @@ export default {
       });
       console.log(rsp);
       console.log('succfully editOne');
-      yield put({ type: 'queryList' });
       return rsp;
     },
 
@@ -47,23 +61,6 @@ export default {
       });
       console.log(rsp);
       console.log('succfully deleteOne');
-      yield put({ type: 'queryList' });
-      return rsp;
-    },
-
-    *addOne({ payload: data }, { call, put }) {
-      console.log(`model - addOne: payload data = ${JSON.stringify(data)}`);
-      console.log('request, get response:');
-      const rsp = yield call(request, '/api/pets', {
-        headers: {
-          'content-type': 'application/json',
-        },
-        method: 'POST',
-        body: JSON.stringify(data),
-      });
-      console.log(rsp);
-      console.log('successfully addOne');
-      yield put({ type: 'queryList' });
       return rsp;
     },
   },
