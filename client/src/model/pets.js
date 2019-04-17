@@ -5,6 +5,7 @@ export default {
   namespace: 'pets',
 
   state: {
+    pet: [],
     petsList: []
   },
 
@@ -14,6 +15,13 @@ export default {
       const rsp = yield call(request, '/api/pets');
       console.log(rsp);
       yield put({ type: 'saveList', payload: { petsList: rsp } });
+    },
+
+    *queryOne({ payload: { id } }, { call, put }) {
+      console.log('model - queryOne: get/refresh page:');
+      const rsp = yield call(request, `/api/pets/${id}`);
+      console.log(rsp);
+      yield put({ type: 'saveOne', payload: { pet: rsp } });
     },
 
     *queryMine({ payload: { ownerId } }, { call, put }) {
@@ -70,6 +78,13 @@ export default {
       return {
         ...state,
         petsList,
+      }
+    },
+
+    saveOne(state, { payload: { pet } }) {
+      return {
+        ...state,
+        pet,
       }
     },
   },

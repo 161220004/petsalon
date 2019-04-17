@@ -17,10 +17,10 @@ function getOwnerId() {
   else
     return "";
 }
-var getId = getOwnerId();
+const getId = getOwnerId();
 
 // Owner的id为getOwnerId的Pets列表
-// http://localhost:8000/owners/{ownerId}/pets
+// http://localhost:8000/owners/{ownerId}
 // 可以修改和删除
 // 可以新建
 
@@ -39,17 +39,20 @@ class OwnerDetails extends React.Component {
       title: '种类',
       dataIndex: 'type',
     },
-    /*
     {
-      title: '链接',
-      dataIndex: 'url',
-      render(value) {
+      title: '详细信息',
+      dataIndex: 'links',
+      render(links_0) {
+        //console.log('get links_0[]:');
+        //console.log(links_0);
+        var apiLink = links_0[0].href;
+        var link = JSON.stringify(apiLink).replace(/(\"|\/api)/g, '').replace(/(8080)/g, '8000');
+        //console.log(`get link: ${apiLink}`);
         return (
-          <a href={value}>{value}</a>
+          <a href={link}>{link}</a>
         );
       },
     },
-    */
     {
       title: 'Operation',
       key: 'operation',
@@ -67,6 +70,7 @@ class OwnerDetails extends React.Component {
   ];
 
   componentDidMount() {
+    console.log('get page:');
     this.props.dispatch({
       type: 'owners/queryOne',
       payload: { id: getId },
@@ -118,7 +122,7 @@ class OwnerDetails extends React.Component {
       <div>
         <ul className={styles.list}>
           <h1 className={styles.bigbold}>{owner.name}</h1>
-          <Link to="/owners">Back to Owners List</Link>
+          <Link to="/owners">Go to Owners List</Link>
           <br /><br />
           <li>编号：{owner.id}</li>
           <li>他/她的宠物：</li>

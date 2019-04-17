@@ -1,28 +1,49 @@
+# Petsalon v2.4
+
+- **演示视频** 请见 **demo.mp4**
+- 运行：
+  - Eclipse 打开 petsalon 项目，执行 `spring-boot:run` 
+  - 在 "Petsalon/client/" 打开命令行工具，执行 `yarn` 和 `yarn start`
+- 前端 client —— 增加 Pet 页面与 Service 页面的联系：
+  - 从 Pets 列表的页面 <http://localhost:8000/pets> ，以及 Owner 的详细信息页面 <http://localhost:8000/owners/{id}> 中的 Pets 小表，可跳转到任一个 Pet 的详细信息页面
+  - Pet 的详细信息页面为 <http://localhost:8000/pet/{id}>，展示了 Pet 详细信息以及该 Pet 拥有的 Service 小表
+  - Pet 详细信息页面的超链接（Go to Pets List）可回到 Pets 混合列表
+  - Service 的混合列表（即不论其 Pet 是谁全都混在一起的表）地址依然在 <http://localhost:8000/service>
+  - 从 Service 混合列表的“宠物”列，可以到达 Service 对应 Pet 的详细信息页面
+  - 取消 Service 的混合列表页面的新建服务功能（因为难以与 Pet 绑定），新建服务功能转移到 Pet 的详细信息页面上
+- 后端
+  - 根据前端页面关系的变动，更改一下 api 地址
+  - ServiceController 类新增方法，供 Pet 获取其拥有的部分服务列表
+
+
+
+
+
+
+
 # Petsalon v2.3
 
-- 前端 client
+- 前端 client —— 增加 Owner 页面与 Pet 页面的联系：
 
-  - 增加 Owner 页面与 Pet 页面的联系：
+  - 从 Owners 列表的页面 <http://localhost:8000/owners> 可跳转到任一个 Owner 的详细信息页面：
 
-    - 从 Owners 列表的页面 <http://localhost:8000/owners> 可跳转到任一个 Owner 的详细信息页面：
+    ![1-1-owners](img/1-1-owners.png)
 
-      ![1-1-owners](img/1-1-owners.png)
+  - Owner 的详细信息页面为 <http://localhost:8000/owners/{id}>，展示了 Owner 个人信息以及该 Owner 拥有的 Pets 小表：
 
-    - Owner 的详细信息页面为 <http://localhost:8000/owners/{id}>，展示了 Owner 个人信息以及该 Owner 拥有的 Pets 列表：
+    ![1-1-ownerpets1](img/1-1-ownerpets1.png)
 
-      ![1-1-ownerpets1](img/1-1-ownerpets1.png)
+    ![1-1-ownerpets5](img/1-1-ownerpets5.png)
 
-      ![1-1-ownerpets5](img/1-1-ownerpets5.png)
+  - Owner 详细信息页面的超链接（Back to Owners List）可回到 Owners 列表
 
-    - Owner 详细信息页面的超链接（Back to Owners List）可回到 Owners 列表
+  - Pets 的混合列表（即不论其 Owner 是谁全都混在一起的表）地址依然在 <http://localhost:8000/pets>：
 
-    - Pets 的混合列表（即不论其 Owner 是谁全都混在一起的表）地址依然在 <http://localhost:8000/pets>：
+    ![1-2-pets](img/1-2-pets.png)
 
-      ![1-2-pets](img/1-2-pets.png)
+  - 从 Pets 混合列表的“主人”列，可以到达 Pet 对应 Owner 的详细信息页面
 
-    - 从 Pets 混合列表的“主人”列，可以到达 Pet 对应 Owner 的详细信息页面
-
-    - 取消 Pets 的混合列表页面的新建宠物功能（因为难以与 Owner 绑定），新建宠物功能转移到 Owner 的详细信息页面上
+  - 取消 Pets 的混合列表页面的新建宠物功能（因为难以与 Owner 绑定），新建宠物功能转移到 Owner 的详细信息页面上
 
     
 

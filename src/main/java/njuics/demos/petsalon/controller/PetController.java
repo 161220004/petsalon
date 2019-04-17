@@ -19,10 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import njuics.demos.petsalon.model.Pet;
-import njuics.demos.petsalon.model.Service;
-import njuics.demos.petsalon.repository.OwnerRepository;
 import njuics.demos.petsalon.repository.PetRepository;
-import njuics.demos.petsalon.repository.ServiceRepository;
+import njuics.demos.petsalon.repository.OwnerRepository;
 
 @Controller    // This means that this class is a Controller
 @RequestMapping(path="/api") // This means URL's start with /api
@@ -31,15 +29,12 @@ public class PetController {
 	private OwnerRepository ownerRepository;
 	@Autowired
 	private PetRepository petRepository;
-	@Autowired
-	private ServiceRepository serviceRepository;
 
 	private static Resource<Pet> toResource(Pet pet) {
 		return new Resource<>(pet
-				, linkTo(methodOn(PetController.class).getAllPets()).withRel("pets") // 全体pet的url
 				, linkTo(methodOn(PetController.class).getOnePet(pet.getId())).withSelfRel() // 自己的url
+				, linkTo(methodOn(PetController.class).getAllPets()).withRel("pets") // 全体pet的url
 				, linkTo(methodOn(OwnerController.class).getOneOwner(pet.getOwner().getId())).withRel("owner") // 主人的url
-				//, linkTo(methodOn(PetController.class).getService(pet.getId())).withRel("service") // 自己的历史服务的url
 				);
 	}
 	
@@ -87,8 +82,7 @@ public class PetController {
 	@PostMapping(path="/owners/{ownerId}/pets")
 	public @ResponseBody 
 	Pet addNewPet (@RequestBody Pet pet, @PathVariable Integer ownerId) {
-		// @ResponseBody means the returned String is the response, not a view name
-		// @RequestParam means it is a parameter from the GET or POST request
+		
 		pet.setOwner(ownerRepository.findById(ownerId)
 				.orElseThrow(() -> new RuntimeException()));
 		petRepository.save(pet);

@@ -6,11 +6,12 @@ import ServiceModal from './modals/ServiceModal';
 
 const FormItem = Form.Item;
 
+// 不论Pet的所有Service混杂列表
+// http://localhost:8000/service
+// 可以修改和删除
+// 不能新建
+
 class ServiceList extends React.Component {
-  state = {
-    visible: false,
-    id: null,
-  };
 
   columns = [
     {
@@ -29,26 +30,19 @@ class ServiceList extends React.Component {
       title: '费用',
       dataIndex: 'fee',
     },
-    /*
-    {
-      title: '链接',
-      dataIndex: 'url',
-      render(value) {
-        return (
-          <a href={value}>{value}</a>
-        );
-      },
-    },
     {
       title: '宠物',
-      dataIndex: 'pet_url',
-      render(value) {
+      dataIndex: 'links[2]',
+      render(links_2) {
+        //console.log('get links[]:');
+        //console.log(links);
+        var link = JSON.stringify(links_2.href).replace(/(\"|\/api)/g, '').replace(/(8080)/g, '8000');
+        //console.log(`get link: ${links_2.href}`);
         return (
-          <a href={value}>{value}</a>
+          <a href={link}>{link}</a>
         );
       },
     },
-    */
     {
       title: 'Operation',
       key: 'operation',
@@ -66,26 +60,24 @@ class ServiceList extends React.Component {
   ];
 
   componentDidMount() {
+    console.log('get page:');
     this.props.dispatch({
       type: 'service/queryList',
     });
   }
 
-  showModal = () => {
-    this.setState({ visible: true });
-  };
-
-  addRow = (data) => {
+  reloadAll = () => {
     this.props.dispatch({
-      type: 'service/addOne',
-      payload: data,
+      type: 'service/queryList',
     });
-  };
+  }
 
   editRow = (id, data) => {
     this.props.dispatch({
       type: 'service/editOne',
       payload: { id, data },
+    }).then(() => {
+      this.reloadAll();
     });
   };
 
@@ -94,21 +86,17 @@ class ServiceList extends React.Component {
     this.props.dispatch({
       type: 'service/deleteOne',
       payload: id,
+    }).then(() => {
+      this.reloadAll();
     });
   };
 
   render() {
-    const { visible, id } = this.state;
     const { serviceList, serviceLoading, form: { getFieldDecorator } } = this.props;
 
     return (
       <div>
         <Table columns={this.columns} dataSource={serviceList} loading={serviceLoading} rowKey="id" />
-
-        <ServiceModal record={{}} onOk={this.addRow}>
-            <Button type="primary">新建</Button>
-        </ServiceModal>
-        
       </div>
     );
   }

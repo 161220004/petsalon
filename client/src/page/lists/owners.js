@@ -7,10 +7,6 @@ import OwnerModal from './modals/OwnerModal';
 const FormItem = Form.Item;
 
 class OwnerList extends React.Component {
-  state = {
-    visible: false,
-    id: null,
-  };
 
   columns = [
     {
@@ -22,14 +18,13 @@ class OwnerList extends React.Component {
       dataIndex: 'id',
     },
     {
-      title: '链接',
-      dataIndex: 'links',
-      render(links) {
-        //console.log('get links[]:');
-        //console.log(links);
-        var apiLink = links[0].href;
-        var link = JSON.stringify(apiLink).replace(/(\"|\/api)/g, '').replace(/(8080)/g, '8000');
-        //console.log(`get link: ${apiLink}`);
+      title: '详细信息',
+      dataIndex: 'links[0]',
+      render(links_0) {
+        //console.log('get links_0[]:');
+        //console.log(links_0);
+        var link = JSON.stringify(links_0.href).replace(/(\"|\/api)/g, '').replace(/(8080)/g, '8000');
+        //console.log(`get link: ${links_0.href}`);
         return (
           <a href={link}>{link}</a>
         );
@@ -52,6 +47,7 @@ class OwnerList extends React.Component {
   ];
 
   componentDidMount() {
+    console.log('get page:');
     this.props.dispatch({
       type: 'owners/queryList',
     });
@@ -91,7 +87,6 @@ class OwnerList extends React.Component {
   };
 
   render() {
-    const { visible, id } = this.state;
     const { ownersList, ownersLoading, form: { getFieldDecorator } } = this.props;
 
     return (

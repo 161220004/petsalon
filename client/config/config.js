@@ -21,9 +21,8 @@ export default {
         { path: 'owners', component: './lists/owners.js' },
         { path: 'owners/:id', component: './lists/ownerdetails.js' },
         { path: 'pets', component: './lists/pets.js' },
-        { path: 'pets/:id', component: './lists/pets.js' },
+        { path: 'pets/:id', component: './lists/petdetails.js' },
         { path: 'service', component: './lists/service.js' },
-        { path: 'service/:id', component: './lists/service.js' },
       ]
     }
   ],

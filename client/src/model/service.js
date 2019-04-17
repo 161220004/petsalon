@@ -16,11 +16,26 @@ export default {
       yield put({ type: 'saveList', payload: { serviceList: rsp } });
     },
 
-    *queryOne({ _ }, { call, put }) {
-      console.log('model - queryOne: get/refresh page:');
-      const rsp = yield call(request, `/api/service/${id}`);
+    *queryMine({ payload: { petId } }, { call, put }) {
+      console.log('model - queryMine: get/refresh page:');
+      const rsp = yield call(request, `/api/pets/${petId}/service`);
       console.log(rsp);
       yield put({ type: 'saveList', payload: { serviceList: rsp } });
+    },
+
+    *addOne({ payload: { petId, data } }, { call, put }) {
+      console.log(`model - addOne: payload petId = ${petId}, data = ${JSON.stringify(data)}`);
+      console.log('request, get response:');
+      const rsp = yield call(request, `/api/pets/${petId}/service`, {
+        headers: {
+          'content-type': 'application/json',
+        },
+        method: 'POST',
+        body: JSON.stringify(data),
+      });
+      console.log(rsp);
+      console.log('successfully addOne');
+      return rsp;
     },
 
     *editOne({ payload: { id, data } }, { call, put }) {
@@ -35,7 +50,6 @@ export default {
       });
       console.log(rsp);
       console.log('succfully editOne');
-      yield put({ type: 'queryList' });
       return rsp;
     },
 
@@ -47,23 +61,6 @@ export default {
       });
       console.log(rsp);
       console.log('succfully deleteOne');
-      yield put({ type: 'queryList' });
-      return rsp;
-    },
-
-    *addOne({ payload: data }, { call, put }) {
-      console.log(`model - addOne: payload data = ${JSON.stringify(data)}`);
-      console.log('request, get response:');
-      const rsp = yield call(request, '/api/service', {
-        headers: {
-          'content-type': 'application/json',
-        },
-        method: 'POST',
-        body: JSON.stringify(data),
-      });
-      console.log(rsp);
-      console.log('successfully addOne');
-      yield put({ type: 'queryList' });
       return rsp;
     },
   },

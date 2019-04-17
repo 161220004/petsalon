@@ -12,10 +12,6 @@ const FormItem = Form.Item;
 // 不能新建
 
 class PetList extends React.Component {
-  state = {
-    visible: false,
-    id: null,
-  };
 
   columns = [
     {
@@ -31,14 +27,26 @@ class PetList extends React.Component {
       dataIndex: 'type',
     },
     {
+      title: '详细信息',
+      dataIndex: 'links[0]',
+      render(links_0) {
+        //console.log('get links_0[]:');
+        //console.log(links_0);
+        var link = JSON.stringify(links_0.href).replace(/(\"|\/api)/g, '').replace(/(8080)/g, '8000');
+        //console.log(`get link: ${links_0.href}`);
+        return (
+          <a href={link}>{link}</a>
+        );
+      },
+    },
+    {
       title: '主人',
-      dataIndex: 'links',
-      render(links) {
-        console.log('get links[]:');
-        console.log(links);
-        var apiLink = links[2].href;
-        var link = JSON.stringify(apiLink).replace(/(\"|\/api)/g, '').replace(/(8080)/g, '8000');
-        console.log(`get link: ${apiLink}`);
+      dataIndex: 'links[2]',
+      render(links_2) {
+        //console.log('get links_2[]:');
+        //console.log(links_2);
+        var link = JSON.stringify(links_2.href).replace(/(\"|\/api)/g, '').replace(/(8080)/g, '8000');
+        //console.log(`get link: ${links_2.href}`);
         return (
           <a href={link}>{link}</a>
         );
@@ -61,6 +69,7 @@ class PetList extends React.Component {
   ];
 
   componentDidMount() {
+    console.log('get page:');
     this.props.dispatch({
       type: 'pets/queryList',
     });
@@ -91,7 +100,6 @@ class PetList extends React.Component {
   };
 
   render() {
-    const { visible, id } = this.state;
     const { petsList, petsLoading, form: { getFieldDecorator } } = this.props;
 
     return (
